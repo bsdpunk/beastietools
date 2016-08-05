@@ -1,23 +1,31 @@
 package main
 
 import (
-	"os"
+    "os"
 
-	"github.com/codegangsta/cli"
+    "github.com/bsdpunk/beastietools/shell"
+    "github.com/codegangsta/cli"
 )
 
 func main() {
 
-	app := cli.NewApp()
-	app.Name = Name
-	app.Version = Version
-	app.Author = "bsdpunk"
-	app.Email = ""
-	app.Usage = ""
 
-	app.Flags = GlobalFlags
-	app.Commands = Commands
-	app.CommandNotFound = CommandNotFound
+    if len(os.Args) < 2{
+        shell.Run()
 
-	app.Run(os.Args)
+    } else {
+
+        app := cli.NewApp()
+        app.Name = Name
+        app.Version = Version
+        app.Author = "bsdpunk"
+        app.Email = ""
+        app.Usage = ""
+
+        app.Flags = GlobalFlags
+        app.Commands = Commands
+        app.CommandNotFound = CommandNotFound
+
+        app.Run(os.Args)
+    }
 }
