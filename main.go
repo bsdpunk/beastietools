@@ -2,7 +2,7 @@ package main
 
 import (
     "os"
-
+        "fmt"
     "github.com/bsdpunk/beastietools/shell"
     "github.com/codegangsta/cli"
 )
@@ -25,7 +25,8 @@ func main() {
         app.Flags = GlobalFlags
         app.Commands = Commands
         app.CommandNotFound = CommandNotFound
-
+        
+        fmt.Println(os.Args)
         app.Run(os.Args)
     }
 }
