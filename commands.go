@@ -18,9 +18,9 @@ var Commands = []cli.Command{
 		Flags:  []cli.Flag{},
 	},
 	{
-		Name:   "profile",
+		Name:   "arp",
 		Usage:  "",
-		Action: command.CmdProfile,
+		Action: command.CmdArp,
 		Flags:  []cli.Flag{},
 	},
 }

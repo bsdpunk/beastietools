@@ -20,11 +20,12 @@ var Commands = []cli.Command{
         Flags:  []cli.Flag{},
     },
     {
-        Name:   "profile",
+        Name:   "arp",
         Usage:  "",
-        Action: command.CmdProfile,
+        Action: command.CmdArp,
         Flags:  []cli.Flag{},
     },
+
 }
 
 var words []string 
@@ -107,6 +108,8 @@ L:
                     app.Author = "bsdpunk"
                     app.Email = ""
                     app.Usage = ""
+                    app.Name = "beastietools"
+                    app.Version = "0.1.0"
 
                     app.Flags = GlobalFlags
                     app.Commands = Commands
