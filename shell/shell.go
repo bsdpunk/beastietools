@@ -2,10 +2,11 @@ package shell
 
 import "fmt"
 import "os"
-import "bufio"
+//import "bufio"
 import "strings"
 import "github.com/codegangsta/cli"
 import "github.com/bsdpunk/beastietools/command"
+import "github.com/gobs/readline"
 
 
 var quit string = "quit"
@@ -27,20 +28,83 @@ var Commands = []cli.Command{
     },
 }
 
+var words []string 
+
+
+var matches = make([]string, 0, len(words))
+
+func AttemptedCompletion(text string, start, end int) []string {
+    if start == 0 { // this is the command to match
+        return readline.CompletionMatches(text, CompletionEntry)
+    } else {
+        return nil
+    }
+}
+
+//
+// this return a match in the "words" array
+//
+func CompletionEntry(prefix string, index int) string {
+    if index == 0 {
+        matches = matches[:0]
+
+        for _, w := range words {
+            if strings.HasPrefix(w, prefix) {
+                matches = append(matches, w)
+            }
+        }
+    }
+
+    if index < len(matches) {
+        return matches[index]
+    } else {
+        return ""
+    }
+}
+
+
+
+
+
+//func completionList(c []cli.Command) {
+
+//    var words []string 
+//    for _, c := range Commands {
+//        words = append(words, c.Name)
+//    }
+//    return words
+//}
+
 func CommandNotFound(c *cli.Context, command string) {
     fmt.Fprintf(os.Stderr, "%s: '%s' is not a %s command. See '%s --help'.", c.App.Name, command, c.App.Name, c.App.Name)
     os.Exit(2)
 }
 
 func Run() {
-    sum := 0
-    for sum < 1{
-        reader := bufio.NewReader(os.Stdin)
-        fmt.Print("beastietools> ")
-        text, _ := reader.ReadString('\n')
+    //sum := 0
+//    var words []string
+for _, c := range Commands {
+    words = append(words, c.Name)
+}
+prompt := "beastietools> " 
+matches = make([]string, 0, len(words))
+//    words = completionList(Commands)
+L:
+    for {
+
+        readline.SetCompletionEntryFunction(CompletionEntry)
+        readline.SetAttemptedCompletionFunction(nil)
+        result := readline.ReadLine(&prompt)
+        if result == nil { // exit loop
+            break L
+        }
+        //reader := bufio.NewReader(os.Stdin)
+        //fmt.Print("beastietools> ")
+        //text, _ := reader.ReadString('\n')
         //fmt.Println(text)
         //fmt.Println(thing)
-        input := strings.TrimSpace(text)
+        input := *result
+        input = strings.TrimSpace(input)
         if input  == quit {
             os.Exit(1)
         }else if input == "ls" {
@@ -67,17 +131,17 @@ func Run() {
                     found = "yes"
 
                 }else{
-                        found = "no"
+                    found = "no"
                 }
             }
-                if found == "no" {
-                    fmt.Println("Invalid Command")
-                }
-                
-            }
-
+//            if found == "no" {
+//                fmt.Println("Invalid Command")
+//            }
+            readline.AddHistory(input) 
         }
+
     }
+}
 
 
 func PrintSlice(slice []string) {
