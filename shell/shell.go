@@ -2,7 +2,6 @@ package shell
 
 import "fmt"
 import "os"
-//import "bufio"
 import "strings"
 import "github.com/codegangsta/cli"
 import "github.com/bsdpunk/beastietools/command"
@@ -41,9 +40,7 @@ func AttemptedCompletion(text string, start, end int) []string {
     }
 }
 
-//
-// this return a match in the "words" array
-//
+
 func CompletionEntry(prefix string, index int) string {
     if index == 0 {
         matches = matches[:0]
@@ -65,44 +62,33 @@ func CompletionEntry(prefix string, index int) string {
 
 
 
-
-//func completionList(c []cli.Command) {
-
-//    var words []string 
-//    for _, c := range Commands {
-//        words = append(words, c.Name)
-//    }
-//    return words
-//}
-
 func CommandNotFound(c *cli.Context, command string) {
     fmt.Fprintf(os.Stderr, "%s: '%s' is not a %s command. See '%s --help'.", c.App.Name, command, c.App.Name, c.App.Name)
     os.Exit(2)
 }
 
 func Run() {
-    //sum := 0
-//    var words []string
+
 for _, c := range Commands {
     words = append(words, c.Name)
 }
+words = append(words, "quit")
+words = append(words, "ls")
+
 prompt := "beastietools> " 
 matches = make([]string, 0, len(words))
-//    words = completionList(Commands)
+
+
 L:
     for {
-
+        found = "no"
         readline.SetCompletionEntryFunction(CompletionEntry)
         readline.SetAttemptedCompletionFunction(nil)
         result := readline.ReadLine(&prompt)
         if result == nil { // exit loop
             break L
         }
-        //reader := bufio.NewReader(os.Stdin)
-        //fmt.Print("beastietools> ")
-        //text, _ := reader.ReadString('\n')
-        //fmt.Println(text)
-        //fmt.Println(thing)
+               
         input := *result
         input = strings.TrimSpace(input)
         if input  == quit {
@@ -113,8 +99,7 @@ L:
 
             for _, c := range Commands {
                 if c.HasName(input) {
-                    //       HelpPrinter(ctx.App.Writer, CommandHelpTemplate, c)
-                    //       return nil
+                    
                     var command []string
                     command = append(command, "beastietools")
                     command = append(command, input)
@@ -130,13 +115,11 @@ L:
                     app.Run(command)
                     found = "yes"
 
-                }else{
-                    found = "no"
                 }
             }
-//            if found == "no" {
-//                fmt.Println("Invalid Command")
-//            }
+            if found == "no" {
+                fmt.Println("Invalid Command")
+            }
             readline.AddHistory(input) 
         }
 
