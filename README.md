@@ -26,6 +26,7 @@ Successfully discovered 1 services:
 ```
 
 ## Install
+Readline.h is a requirement in unix enviroments, so readline-devel or readline-dev packages.
 
 To install, use `go get`:
 
